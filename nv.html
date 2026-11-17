@@ -162,19 +162,50 @@ var EVMAP = (function () {
   var T = { 'Cổng': ['#076AA7', 'C'], 'Điểm thả': ['#ED7920', '↓'], 'Check-in': ['#ED7920', '✓'], 'Sảnh': ['#06A3D8', 'S'], 'Hội trường': ['#05507E', 'H'], 'Nhà vệ sinh': ['#06A3D8', 'WC'], 'Hút thuốc': ['#444446', '⌁'], 'Y tế': ['#D93025', '+'], 'Lối thoát': ['#1E8E3E', '⇥'], 'Bãi ô tô': ['#EAAF4F', 'P'], 'Bãi xe máy': ['#EAAF4F', 'M'] };
   function e(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function base() {
-    return '<rect width="1000" height="625" fill="#EEF4F8"/>' +
-      '<path d="M0 60 H1000 M62 60 V625 M62 470 L560 470 L861 403 M861 60 V625 M861 403 L1000 380" stroke="#fff" stroke-width="30" fill="none" stroke-linecap="round"/>' +
-      '<path d="M0 60 H1000 M62 60 V625 M62 470 L560 470 L861 403 M861 60 V625 M861 403 L1000 380" stroke="#D5DEE6" stroke-width="2" stroke-dasharray="10 10" fill="none"/>' +
-      '<text x="20" y="40" font-size="15" fill="#6B7A88" font-weight="600">Đường N0</text><text x="880" y="600" font-size="15" fill="#6B7A88" font-weight="600">D2</text>' +
-      '<rect x="92" y="92" width="740" height="352" rx="18" fill="#DCEBF3" stroke="#B8D3E3"/>' +
-      '<rect x="208" y="194" width="111" height="64" rx="4" fill="#9CCB8F"/><text x="263" y="231" text-anchor="middle" font-size="12" fill="#2F5F2A">Sân bóng</text>' +
-      '<rect x="188" y="266" width="208" height="137" rx="6" fill="#B9C9D6" stroke="#8FA5B6"/><text x="292" y="328" text-anchor="middle" font-size="16" font-weight="700" fill="#05507E">Tòa C</text><text x="292" y="348" text-anchor="middle" font-size="11.5" fill="#05507E">Nhà đa năng · bể bơi</text>' +
-      '<rect x="194" y="118" width="139" height="66" rx="6" fill="#B9C9D6" stroke="#8FA5B6"/><text x="263" y="156" text-anchor="middle" font-size="15" font-weight="700" fill="#05507E">Tòa B</text>' +
-      '<path d="M389 111 L430 104 L515 268 L493 292 Z M515 268 L542 97 L580 101 L548 280 Z M542 97 L778 139 L770 172 L572 140 Z M770 172 L695 264 L668 248 L740 160 Z" fill="#B9C9D6" stroke="#8FA5B6"/>' +
-      '<text x="560" y="210" text-anchor="middle" font-size="17" font-weight="700" fill="#05507E">Tòa A</text><text x="560" y="228" text-anchor="middle" font-size="11.5" fill="#05507E">Lớp học · văn phòng</text>' +
-      '<circle cx="722" cy="172" r="22" fill="#E6EEF4" stroke="#8FA5B6"/>' +
-      '<rect x="420" y="480" width="300" height="110" rx="10" fill="#E3E8D9" stroke="#C9D1BC" stroke-dasharray="6 5"/><text x="570" y="600" text-anchor="middle" font-size="11.5" fill="#6B7A88">Bãi bổ sung (theo phương án được duyệt)</text>' +
-      '<text x="990" y="618" text-anchor="end" font-size="10.5" fill="#8896A3">Sơ đồ minh họa, không theo tỷ lệ</text>';
+    var RD = 'M0 60 H1000 M62 60 V625 M62 470 L560 470 L861 403 M861 60 V625 M861 403 L1000 380', s, i;
+    function sh(d, f, st) { return '<path d="' + d + '" transform="translate(5 7)" fill="#24323F" opacity=".16"/><path d="' + d + '" fill="' + f + '" stroke="' + st + '" stroke-width="1.5" stroke-linejoin="round"/>'; }
+    function cay(x, y, r) { return '<circle cx="' + x + '" cy="' + y + '" r="' + (r || 6) + '" fill="#7DB77A" opacity=".85"/><circle cx="' + (x - 1.5) + '" cy="' + (y - 1.5) + '" r="' + ((r || 6) * .45) + '" fill="#A5D29E" opacity=".9"/>'; }
+    function bai(x, y, w, h) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="5" fill="#1E8E3E" opacity=".2"/><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="5" fill="none" stroke="#1E8E3E" stroke-width="1.5" stroke-dasharray="7 5"/>'; }
+    s = '<rect width="1000" height="625" fill="#E6EFE6"/>' +
+      /* đất ngoài khuôn viên */
+      '<rect x="0" y="0" width="1000" height="42" fill="#DDE8DC"/><rect x="882" y="80" width="118" height="290" rx="10" fill="#DDE8DC"/><path d="M84 492 L560 492 L840 430 L840 625 L84 625 Z" fill="#DDE8DC"/><rect x="0" y="80" width="40" height="545" fill="#DDE8DC"/>' +
+      /* đường */
+      '<path d="' + RD + '" stroke="#BCC8D2" stroke-width="36" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="' + RD + '" stroke="#F8FAFB" stroke-width="31" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path d="' + RD + '" stroke="#C9D4DD" stroke-width="2" stroke-dasharray="12 10" fill="none"/>' +
+      /* khuôn viên */
+      '<path d="M104 86 H822 Q834 86 834 98 V382 L562 446 H104 Q92 446 92 434 V98 Q92 86 104 86 Z" fill="#F5F1E8" stroke="#D8CFBC" stroke-width="2"/>' +
+      /* đường nội bộ + sân đón */
+      '<path d="M470 80 V97 H362 V250 L428 300 V424" stroke="#DCD6C8" stroke-width="26" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M470 80 V97 H362 V250 L428 300 V424" stroke="#EDE9DF" stroke-width="21" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path d="M404 286 H500 V428 H404 Z" fill="#EFE7D6" stroke="#D8CFBC"/><path d="M404 322 H452" stroke="#C0282D" stroke-width="9" stroke-linecap="round" opacity=".8"/>' +
+      /* bãi đỗ dọc đường */
+      bai(300, 49, 150, 22) + bai(560, 49, 225, 22) + bai(51, 150, 22, 175) + bai(850, 205, 22, 185) +
+      '<rect x="420" y="496" width="300" height="100" rx="10" fill="#E9E3CF" stroke="#C9BF9F" stroke-dasharray="6 5"/><text x="570" y="551" text-anchor="middle" font-size="12" fill="#7A6F4F" font-weight="600">Bãi bổ sung (theo phương án được duyệt)</text>' +
+      /* sân bóng */
+      '<rect x="208" y="194" width="111" height="64" rx="4" fill="#86C27A" stroke="#fff" stroke-width="2"/>';
+    for (i = 0; i < 5; i++) s += '<rect x="' + (208 + i * 22.2 + 11.1) + '" y="195" width="11.1" height="62" fill="#9CD08F" opacity=".7"/>';
+    s += '<path d="M263.5 194 V258" stroke="#fff" stroke-width="1.5"/><circle cx="263.5" cy="226" r="9" fill="none" stroke="#fff" stroke-width="1.5"/><text x="263" y="250" text-anchor="middle" font-size="10" fill="#2F5F2A" font-weight="700">Sân bóng</text>' +
+      /* Tòa B, C */
+      sh('M200 118 H327 Q333 118 333 124 V178 Q333 184 327 184 H200 Q194 184 194 178 V124 Q194 118 200 118 Z', '#FBDDBE', '#E3A566') +
+      '<text x="263" y="149" text-anchor="middle" font-size="15" font-weight="800" fill="#8A4B0F">Tòa B</text><text x="263" y="166" text-anchor="middle" font-size="10.5" fill="#8A4B0F">Hoạt động sáng tạo</text>' +
+      sh('M194 266 H390 Q396 266 396 272 V397 Q396 403 390 403 H194 Q188 403 188 397 V272 Q188 266 194 266 Z', '#C3D5EA', '#7F9FC4') +
+      '<path d="M188 312 H396 M292 266 V312" stroke="#A9C0DB" stroke-width="1.5"/>' +
+      '<text x="292" y="392" text-anchor="middle" font-size="12.5" font-weight="800" fill="#05507E">Tòa C · Nhà thi đấu · bể bơi</text>' +
+      /* Tòa A: sân vườn rồi các cánh nhà */
+      '<path d="M436 114 L538 106 L516 256 Z" fill="#DDEBD2"/><path d="M584 150 L736 174 L668 246 L556 272 Z" fill="#CFE5C3"/>' + cay(470, 150, 7) + cay(500, 190, 6) + cay(610, 185, 7) + cay(650, 215, 6) + cay(600, 240, 6) + cay(690, 200, 5) +
+      sh('M389 111 L430 104 L515 268 L493 292 Z', '#CDE5F2', '#79AFCB') + sh('M515 268 L542 97 L580 101 L548 280 Z', '#D8ECF6', '#79AFCB') + sh('M542 97 L778 139 L770 172 L572 140 Z', '#CDE5F2', '#79AFCB') + sh('M770 172 L695 264 L668 248 L740 160 Z', '#D8ECF6', '#79AFCB') +
+      '<circle cx="727" cy="179" r="22" fill="#24323F" opacity=".16"/><circle cx="722" cy="172" r="22" fill="#EBC766" stroke="#C99A2E" stroke-width="1.5"/><circle cx="716" cy="165" r="9" fill="#F5DD96" opacity=".9"/>' +
+      '<text x="640" y="128" text-anchor="middle" font-size="17" font-weight="800" fill="#05507E" transform="rotate(10 640 128)">Tòa A</text><text x="612" y="300" text-anchor="middle" font-size="11.5" fill="#05507E" font-weight="600">Tòa A · Lớp học · văn phòng</text>' +
+      /* cổng chính */
+      '<path d="M450 90 Q470 68 490 90" stroke="#076AA7" stroke-width="6" fill="none" stroke-linecap="round"/>';
+    /* cây ven khuôn viên */
+    for (i = 0; i < 9; i++) s += cay(120 + i * 22, 432, 5);
+    for (i = 0; i < 7; i++) s += cay(106, 110 + i * 46, 5);
+    for (i = 0; i < 6; i++) s += cay(818, 200 + i * 30, 5);
+    for (i = 0; i < 6; i++) s += cay(540 + i * 44, 418 - i * 9.8, 5);
+    s += '<text x="18" y="27" font-size="12.5" fill="#5F6B76" font-weight="700">↖ Nút giao Đại Phúc · QL18</text><text x="560" y="27" font-size="12.5" fill="#5F6B76" font-weight="600">Đường trước cổng</text><text x="878" y="600" font-size="14" fill="#5F6B76" font-weight="700">D2</text>' +
+      '<g transform="translate(945 130)"><circle r="24" fill="#fff" stroke="#C9D4DD" stroke-width="1.5"/><path d="M0 -17 L7 6 L0 1 L-7 6 Z" fill="#C0282D"/><text y="19" text-anchor="middle" font-size="10" font-weight="800" fill="#24323F">B</text></g>' +
+      '<text x="990" y="618" text-anchor="end" font-size="10.5" fill="#8896A3">Sơ đồ dựng theo ảnh vệ tinh, tỷ lệ gần đúng</text>';
+    return s;
   }
   function svg(dd, o) {
     o = o || {};
@@ -238,6 +269,7 @@ var EVMAP3 = (function () {
     return '<button class="x" aria-label="Đóng">×</button><span class="tg" style="background:' + mau(v) + '">' + e(v.so ? v.so + ' · ' : '') + e(v.loai || 'Khu vực') + '</span><b>' + e(v.ten) + '</b>' +
       (v.mt ? '<div>' + e(v.mt) + '</div>' : '') + (v.gio ? '<div style="margin-top:4px;color:#6B7A88">🕘 ' + e(v.gio) + '</div>' : '') +
       (k ? '<div style="margin-top:6px;font-weight:700;color:' + (k.cap && k.da >= k.cap ? '#D93025' : '#1E8E3E') + '">🚗 Đã xếp ' + k.da + (k.cap ? '/' + k.cap : '') + ' xe' + (k.cap ? ' · còn ' + Math.max(0, k.cap - k.da) : '') + '</div>' : '') +
+      (v.td ? '<a href="https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(v.td) + '&travelmode=driving" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;padding:8px 12px;border-radius:99px;background:#076AA7;color:#fff;font:700 13px Arial;text-decoration:none;pointer-events:auto">🧭 Chỉ đường tới đây</a>' : '') +
       (opt.extra ? opt.extra(v) : '');
   }
   /* Gắn tương tác cho mọi bản đồ trong root */
