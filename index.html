@@ -2565,7 +2565,8 @@ var EVMAP3 = (function () {
       return '<g class="z' + (hi.indexOf(v.ma) >= 0 ? ' hi' : '') + (hi.length && hi.indexOf(v.ma) < 0 && opt.mo ? ' mo' : '') + '" data-i="' + i + '" style="--c:' + mau(v) + '"><polygon class="sd" points="' + sd + '"/><polygon class="pf" points="' + s + '"/>' +
         '<g class="bd"><circle cx="' + c[0] + '" cy="' + c[1] + '" r="' + r + '" fill="' + mau(v) + '" stroke="#fff" stroke-width="3"/><text x="' + c[0] + '" y="' + (c[1] + 6) + '" text-anchor="middle" font-size="17" font-weight="800" fill="#fff" font-family="Arial">' + so + '</text></g></g>';
     }).join('');
-    return (document.getElementById('m3css') ? '' : CSS) + '<div class="m3w"><button class="m3z" type="button">⤢ Phóng to</button><div class="m3" data-m3><img src="' + e(opt.img || IMG) + '" alt="Ảnh khuôn viên trường"><svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' + g + '</svg><div class="m3i"></div></div></div><div class="m3p"></div>' +
+    if (!document.getElementById('m3css')) { var st = document.createElement('div'); st.innerHTML = CSS; document.head.appendChild(st.firstChild); }
+    return '<div class="m3w"><button class="m3z" type="button">⤢ Phóng to</button><div class="m3" data-m3><img src="' + e(opt.img || IMG) + '" alt="Ảnh khuôn viên trường"><svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' + g + '</svg><div class="m3i"></div></div></div><div class="m3p"></div>' +
       (opt.legend !== false && V.length ? '<div class="m3l">' + V.map(function (v, i) { return '<button data-i="' + i + '"><i style="background:' + mau(v) + '">' + e(v.so || (i + 1)) + '</i>' + e(v.ten) + '</button>'; }).join('') + '</div>' : '');
   }
   function thong(v, opt) {
