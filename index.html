@@ -2679,6 +2679,26 @@ var EVBAN = (function () {
         if (o.onPick) o.onPick(b, t);
       }
       function ve2() { var old = w.querySelector('svg'), tmp = document.createElement('div'); tmp.innerHTML = svg(o); old.parentNode.replaceChild(tmp.firstChild, old); var kp = w.querySelector('.kp'); if (kp) { var t2 = document.createElement('div'); t2.innerHTML = html(o); var k2 = t2.querySelector('.kp'); if (k2) kp.innerHTML = k2.innerHTML; } [].forEach.call(w.querySelectorAll('.tb'), function (g) { g.classList.toggle('on', +g.dataset.b === cur); }); }
+      /* Rê chuột vào bàn (máy tính): hiện nhanh ai đang ngồi. Chỉ hiện tên khi dữ liệu bàn có danh sách (màn nội bộ). 18/11/2026 */
+      var tp = null, tpB = 0;
+      function tpAn() { if (tp) tp.style.display = 'none'; tpB = 0; }
+      w.addEventListener('mousemove', function (ev) {
+        if (window.matchMedia && !matchMedia('(hover: hover)').matches) return;
+        var g = ev.target.closest && ev.target.closest('.tb'); if (!g) { tpAn(); return; }
+        var b = +g.dataset.b;
+        if (!tp) { tp = document.createElement('div'); tp.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;max-width:320px;background:#fff;border:1.5px solid #05507E;border-radius:12px;box-shadow:0 8px 24px rgba(5,80,126,.25);padding:10px 12px;font:13px/1.45 Montserrat,Arial,sans-serif;color:#1d2b33'; document.body.appendChild(tp); }
+        if (b !== tpB) {
+          tpB = b; var t = (o.stats || {})[b] || {}, xep = t.so || 0, den = t.ci || 0, kz = khu(b, o.n, o.per), ds = t.ds || [];
+          tp.innerHTML = '<div style="font:800 15px Montserrat,Arial;color:#05507E">Bàn ' + (b < 10 ? '0' : '') + b + (kz ? ' <span style="font:800 11px Arial;background:' + KHU[kz][0] + ';color:#fff;border-radius:99px;padding:2px 7px;vertical-align:2px">KHU ' + kz + '</span>' : '') + (vipList(o.vip).indexOf(b) >= 0 ? ' <span style="font:700 11px Arial;background:#EAAF4F;color:#5A3B00;border-radius:99px;padding:2px 7px">★ BOD</span>' : '') + '</div>' +
+            '<div style="color:#5b6873;margin:2px 0 4px"><b style="color:' + (xep > ghe ? '#D93025' : '#1d2b33') + '">' + xep + '/' + ghe + '</b> ghế đã xếp · <b style="color:#1E8E3E">' + den + '</b> đã đến' + (xep < ghe ? ' · còn ' + (ghe - xep) : '') + '</div>' +
+            (ds.length ? '<div style="border-top:1px solid #E3E9EF;padding-top:4px">' + ds.slice(0, 14).map(function (k) { return '<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (k[2] ? '<b style="color:#1E8E3E">✓</b> ' : '<span style="color:#B9C6D2">○</span> ') + e(k[0]) + ' <span style="color:#6B7A88">· ' + k[1] + ' người' + (k[3] ? ' · ' + e(k[3]) : '') + '</span></div>'; }).join('') + (ds.length > 14 ? '<div style="color:#6B7A88">… và ' + (ds.length - 14) + ' khách nữa</div>' : '') + '</div>' : (xep ? '<div style="color:#6B7A88">Bấm vào bàn để xem chi tiết</div>' : '<div style="color:#6B7A88">Bàn trống</div>'));
+          tp.style.display = 'block';
+        }
+        var x = ev.clientX + 16, y = ev.clientY + 16, r = tp.getBoundingClientRect();
+        if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - 12; if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - 12;
+        tp.style.left = Math.max(8, x) + 'px'; tp.style.top = Math.max(8, y) + 'px';
+      });
+      w.addEventListener('mouseleave', tpAn); window.addEventListener('scroll', tpAn, true);
       w.addEventListener('click', function (ev) { if (!ev.target.closest('svg')) return; var g = ev.target.closest('.tb'); cur = g ? +g.dataset.b : 0; show(cur); });
       if (o.poll) { var iv = setInterval(function () { if (!document.body.contains(w)) { clearInterval(iv); return; } if (document.hidden) return; o.poll().then(function (m) { var st = o.stats = o.stats || {}, doi = false; Object.keys(m || {}).forEach(function (k) { var a = st[k] = st[k] || {}; if (a.ngoi !== m[k].ngoi || a.kin !== m[k].kin) { doi = true; a.ngoi = m[k].ngoi; a.kin = m[k].kin; a.by = m[k].by; a.lc = m[k].lc; } }); if (doi) { ve2(); if (cur && !(pn.querySelector('.dc') && pn.contains(document.activeElement))) show(cur); } }).catch(function () {}); }, 20000); }
       if (o.mo) show(so(o.mo));
