@@ -2705,14 +2705,14 @@ function sheet(html){var s=document.getElementById('sh');s.innerHTML=html+'<butt
 
 /* ---------- Chọn vai trò (POV) ---------- */
 var CA=document.body.getAttribute('data-ca')||'',THU=document.body.getAttribute('data-thu')==='1';if(/^</.test(CA))CA='';
-var IC={kh:['#E7F2F9','#076AA7','<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19c.6-3.2 3-5 5.5-5s4.9 1.8 5.5 5M14.5 14.6c2.4-.4 5 1 5.8 4.4"/>'],nv:['#FDEEE2','#B85A10','<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v3h6V3M9 11h6M9 15h4"/>'],btc:['#E6F4EA','#1E8E3E','<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],ql:['#F1EAFB','#6B3FA0','<circle cx="12" cy="7" r="3"/><path d="M5 20c.8-4 3.6-6 7-6s6.2 2 7 6M4 4l2 2M20 4l-2 2"/>']};
+var IC={ci:['#FDE8E7','#C0392B','<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><rect x="8" y="8" width="8" height="8" rx="1"/>'],kh:['#E7F2F9','#076AA7','<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19c.6-3.2 3-5 5.5-5s4.9 1.8 5.5 5M14.5 14.6c2.4-.4 5 1 5.8 4.4"/>'],nv:['#FDEEE2','#B85A10','<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v3h6V3M9 11h6M9 15h4"/>'],btc:['#E6F4EA','#1E8E3E','<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],ql:['#F1EAFB','#6B3FA0','<circle cx="12" cy="7" r="3"/><path d="M5 20c.8-4 3.6-6 7-6s6.2 2 7 6M4 4l2 2M20 4l-2 2"/>']};
 function roleBtn(k,t,d){var c=IC[k];return '<button class="role" data-r="'+k+'"><span class="ic" style="background:'+c[0]+'"><svg viewBox="0 0 24 24" style="stroke:'+c[1]+'">'+c[2]+'</svg></span><span><b>'+t+'</b><span class="d">'+d+'</span></span></button>'}
 function chon(){
   S.btc='';S.ql='';S.vn=0;clearTimeout(S.tm);document.getElementById('lg').style.display='';document.getElementById('nav').classList.add('hide');
   var c=({"vi": ["Lễ kỷ niệm 5 năm", "Chọn vai trò của bạn để xem đúng thông tin cần dùng.", "Bạn là", "Phụ huynh, khách mời", "Vé vào cổng, bàn ngồi, khu đỗ xe, bản đồ, lịch trình, góp ý", "Nhân sự trực sự kiện", "Ban tổ chức"], "en": ["5th Anniversary", "Choose your role to see the information you need.", "I am a", "Parent or guest", "Entry ticket, table, parking, map, programme, feedback", "Event staff (Vietnamese)", "Organiser (Vietnamese)"], "ko": ["개교 5주년 기념식", "역할을 선택하시면 필요한 정보를 볼 수 있습니다.", "나는", "학부모 · 내빈", "입장권, 테이블, 주차, 지도, 일정, 의견", "행사 근무자 (베트남어)", "주최 측 (베트남어)"], "zh": ["建校五周年庆典", "请选择您的身份，以查看所需信息。", "我是", "家长／来宾", "入场券、餐桌、停车、地图、日程、反馈", "活动工作人员（越南语）", "组委会（越南语）"]})[S.lang];
   document.getElementById('hT').textContent=c[0];document.getElementById('hS').textContent=c[1];
-  W.innerHTML='<div class="card"><h2>'+c[2]+'</h2>'+roleBtn('kh',c[3],c[4])+roleBtn('nv',c[5],'Thẻ nhiệm vụ, vị trí trực, checklist có ảnh, báo sự cố')+roleBtn('ql',({vi:'Trưởng kênh',en:'Channel lead (Vietnamese)',ko:'채널 책임자 (베트남어)',zh:'频道负责人（越南语）'})[S.lang],'Điểm danh kênh, checklist, sự cố, thông báo, đổi người, tổng kết')+roleBtn('btc',c[6],'Theo dõi khách, check-in, khu đỗ, nhân sự, sự cố, quyết định')+'</div>'+(THU?'<div class="thu" id="mau"><b>CHẾ ĐỘ THỬ</b> · đang tải tài khoản mẫu…</div>':'');
-  W.querySelector('.card').onclick=function(e){var b=e.target.closest('[data-r]');if(!b)return;var r=b.dataset.r;if(r==='kh')login();else maForm(r)};
+  W.innerHTML='<div class="card"><h2>'+c[2]+'</h2>'+roleBtn('kh',c[3],c[4])+roleBtn('nv',c[5],'Thẻ nhiệm vụ, vị trí trực, checklist có ảnh, báo sự cố')+roleBtn('ql',({vi:'Trưởng kênh',en:'Channel lead (Vietnamese)',ko:'채널 책임자 (베트남어)',zh:'频道负责人（越南语）'})[S.lang],'Điểm danh kênh, checklist, sự cố, thông báo, đổi người, tổng kết')+roleBtn('btc',c[6],'Theo dõi khách, check-in, khu đỗ, nhân sự, sự cố, quyết định')+roleBtn('ci',({vi:'Quầy check-in nhanh',en:'Quick check-in desk (Vietnamese)',ko:'빠른 체크인 (베트남어)',zh:'快速签到（越南语）'})[S.lang],'Quét mã QR của khách, không cần đăng nhập')+'</div>'+(THU?'<div class="thu" id="mau"><b>CHẾ ĐỘ THỬ</b> · đang tải tài khoản mẫu…</div>':'');
+  W.querySelector('.card').onclick=function(e){var b=e.target.closest('[data-r]');if(!b)return;var r=b.dataset.r;if(r==='kh')login();else if(r==='ci')ciNhanh();else maForm(r)};
   if(THU)call('khMau').then(function(m){var x=document.getElementById('mau');if(!x||!m)return;
     x.innerHTML='<b>CHẾ ĐỘ THỬ</b> · tài khoản mẫu để trình bày (tắt trước sự kiện)<div style="margin-top:8px"><b>Phụ huynh:</b> mã HS <code>'+esc(m.khach.maHS)+'</code> · lớp <code>'+esc(m.khach.xacThuc)+'</code> <button data-k="1">Vào ngay</button></div>'+
     m.nguoi.map(function(p){return '<div style="margin-top:4px"><b>'+esc(p.loai)+':</b> '+esc(p.ten.replace(/^.*?– /,''))+' · mã <code>'+esc(p.ma)+'</code> <button data-r2="'+(/ban tổ chức/i.test(p.loai)?'btc':/trưởng kênh/i.test(p.loai)?'ql':'nv')+'" data-m="'+esc(p.ma)+'">Vào ngay</button></div>'}).join('');
@@ -3278,6 +3278,50 @@ function khuNgoi(k){var cf=(S.pub&&S.pub.cfg)||{},z=k.ban?EVBAN.khu(k.ban,cf.soB
   if(/Liên cấp/.test(k.nhom)&&mx>=6)return 'Khu A';
   if(/Mầm non|Liên cấp/.test(k.nhom))return 'Khu B / C / D';
   return T(75)}
+
+/* ---------- Quầy check-in nhanh: chỉ quét QR, không đăng nhập (18/11) ---------- */
+function ciMa(t){t=String(t||'').trim();var m=t.match(/[?&]t=([A-Za-z0-9]{8,14})/);if(m)return m[1].toUpperCase();m=t.match(/^(?:EV-)?([A-Za-z0-9]{8,14})$/i);return m?m[1].toUpperCase():''}
+function ciJsQR(){return window.jsQR?Promise.resolve():new Promise(function(ok,no){var x=document.createElement('script');x.src='https://ducmchn-design.github.io/sukien/jsqr.min.js';x.onload=ok;x.onerror=function(){no(new Error('Không tải được bộ đọc QR. Kiểm tra mạng.'))};document.head.appendChild(x)})}
+function ciNhanh(){
+  try{document.getElementById('hT').textContent='Quầy check-in nhanh';document.getElementById('hS').textContent='Quét mã QR trên vé hoặc thư mời của khách'}catch(e){}
+  var Q={n:0,last:'',lastT:0,busy:0,st:null,raf:0,da:{}};S.ciQ=Q;
+  W.innerHTML='<div class="card" style="padding:12px"><div id="cv" style="position:relative;border-radius:14px;overflow:hidden;background:#0B1A26;aspect-ratio:1/1"><video id="vd" playsinline muted style="width:100%;height:100%;object-fit:cover;display:block"></video><div style="position:absolute;inset:16%;border:3px solid rgba(255,255,255,.85);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.28)"></div><div id="cs" style="position:absolute;left:0;right:0;bottom:10px;text-align:center;color:#fff;font-weight:700;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.6)">Đang mở camera…</div></div>'
+   +'<div id="kq" style="margin-top:12px"></div>'
+   +'<div class="row" style="margin-top:10px;gap:8px"><label class="btn gh" for="ciAnh" style="flex:1;text-align:center">Chụp ảnh mã QR</label><input type="file" id="ciAnh" accept="image/*" capture="environment" hidden><button class="btn gh" id="ciTay" style="flex:1">Nhập mã tay</button></div>'
+   +'<p class="sm" id="ciDem" style="margin:10px 0 0;text-align:center">Máy này đã check-in: 0 khách</p>'
+   +'<p class="sm" style="margin:8px 0 0">Khách quên QR hoặc không có trong danh sách: chuyển sang quầy có đăng nhập để xác minh với Ban tổ chức hoặc GVCN.</p>'
+   +'<button class="btn gh" id="ciVe" style="margin-top:10px">← Chọn vai trò khác</button></div>';
+  document.getElementById('ciVe').onclick=function(){ciDung();chon()};
+  document.getElementById('ciTay').onclick=function(){var m=prompt('Nhập mã khách (in dưới mã QR):');if(m)ciGui(m)};
+  document.getElementById('ciAnh').onchange=function(e){var f=e.target.files[0];if(!f)return;e.target.value='';ciAnhQR(f).then(ciGui).catch(function(er){ciKQ('bad','Chưa đọc được mã',er.message)})};
+  ciJsQR().catch(function(){});if(!S.pub)call('khCongKhai').then(function(p){S.pub=p}).catch(function(){});ciMoCam();
+}
+function ciDung(){var Q=S.ciQ;if(!Q)return;cancelAnimationFrame(Q.raf);if(Q.st)Q.st.getTracks().forEach(function(t){t.stop()});Q.st=null;S.ciQ=null}
+function ciMoCam(){var Q=S.ciQ,cs=document.getElementById('cs');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){cs.textContent='Máy không mở được camera trực tiếp. Dùng nút "Chụp ảnh mã QR".';return}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:1280}},audio:false}).then(function(st){if(!S.ciQ){st.getTracks().forEach(function(t){t.stop()});return}
+    Q.st=st;var v=document.getElementById('vd');v.srcObject=st;v.play();cs.textContent='Đưa mã QR vào khung';
+    var bd=window.BarcodeDetector?new BarcodeDetector({formats:['qr_code']}):null,c=document.createElement('canvas'),x=c.getContext('2d',{willReadFrequently:true}),tLast=0;
+    function vong(ts){if(!S.ciQ)return;Q.raf=requestAnimationFrame(vong);if(Q.busy||ts-tLast<220||v.readyState<2)return;tLast=ts;
+      if(bd){Q.busy=1;bd.detect(v).then(function(a){Q.busy=0;if(a&&a[0])ciThay(a[0].rawValue)}).catch(function(){Q.busy=0;bd=null});return}
+      if(!window.jsQR)return;var w=v.videoWidth,h=v.videoHeight,k=Math.min(1,640/Math.max(w,h));c.width=w*k|0;c.height=h*k|0;x.drawImage(v,0,0,c.width,c.height);
+      var r=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height,{inversionAttempts:'dontInvert'});if(r&&r.data)ciThay(r.data)}
+    Q.raf=requestAnimationFrame(vong)}).catch(function(){cs.textContent='Chưa được cấp quyền camera. Bấm cho phép camera hoặc dùng nút "Chụp ảnh mã QR".'})}
+function ciThay(txt){var Q=S.ciQ,m=ciMa(txt),now=Date.now();if(!Q)return;if(!m){ciKQ('bad','Mã QR không phải vé sự kiện','Nhờ khách mở đúng vé trên app hoặc thư mời.');return}
+  if(Q.da[m]||(m===Q.last&&now-Q.lastT<8000))return;Q.last=m;Q.lastT=now;ciGui(m)}
+function ciAnhQR(f){return ciJsQR().then(function(){return new Promise(function(ok,no){var u=URL.createObjectURL(f),im=new Image();im.onload=function(){var tries=[1400,900,600],i=0;
+  function thu(){if(i>=tries.length){URL.revokeObjectURL(u);return no(new Error('Không đọc được mã QR trong ảnh. Chụp lại gần hơn, đủ sáng.'))}var mx=tries[i++],k=Math.min(1,mx/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k|0;c.height=im.height*k|0;var x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);var r=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height,{inversionAttempts:'attemptBoth'});if(r&&r.data){URL.revokeObjectURL(u);return ok(r.data)}setTimeout(thu,0)}
+  thu()};im.onerror=function(){no(new Error('Không mở được ảnh.'))};im.src=u})})}
+function ciGui(m){var Q=S.ciQ;m=ciMa(m)||String(m).trim().toUpperCase();if(!Q||Q.dang)return;Q.dang=1;ciKQ('','Đang check-in…','Mã '+m);
+  call('khCheckinQR',m).then(function(v){Q.dang=0;try{navigator.vibrate&&navigator.vibrate(v.trungLap?[80,60,80]:120)}catch(e){}
+    var cho=khuNgoi(v)+(v.ban?' · Bàn '+v.ban:'');
+    if(v.khongDu){ciKQ('warn','Khách đã báo không tham dự',esc(v.ten)+' · '+esc(v.nhom)+'<br>Vẫn đã ghi nhận vào lúc '+esc(v.luc.slice(11,16))+'. Báo Ban tổ chức để xếp chỗ.');return}
+    if(v.trungLap){ciKQ('warn','Đã check-in trước đó lúc '+esc(v.luc.slice(11,16)),'<b>'+esc(v.ten)+'</b> · '+v.so+' người<br>'+esc(cho)+(v.boi?'<br><span class="sm">bởi '+esc(v.boi)+'</span>':'')+'<br>Nếu khách vừa mới đến lần đầu, báo an ninh kiểm tra mã bị dùng lại.');return}
+    Q.da[v.ma]=1;Q.n++;document.getElementById('ciDem').textContent='Máy này đã check-in: '+Q.n+' khách';
+    ciKQ('ok','Check-in thành công','<b style="font-size:17px">'+esc(v.ten)+'</b><br>'+esc(v.nhom)+' · <b>'+v.so+' người</b><div style="margin-top:8px;font:800 22px/1.2 inherit;color:#05507E">'+esc(cho)+'</div>'+(v.nhom==='VIP'?'<div class="tag bad" style="margin-top:8px">Quan khách – báo người đón và khu A</div>':''))
+  }).catch(function(er){Q.dang=0;ciKQ('bad','Không check-in được',esc(er.message))})}
+function ciKQ(loai,tieu,nd){var e=document.getElementById('kq');if(!e)return;var mau={ok:['#E6F4EA','#1E8E3E'],warn:['#FFF4E5','#B85A10'],bad:['#FDE8E7','#C0392B'],'':['#F2F6FA','#05507E']}[loai];
+  e.innerHTML='<div style="background:'+mau[0]+';border-left:5px solid '+mau[1]+';border-radius:12px;padding:12px 14px"><div style="font-weight:800;color:'+mau[1]+';font-size:16px">'+tieu+'</div><div style="margin-top:4px;line-height:1.5">'+nd+'</div></div>'}
 /* ---------- Trang "Bàn số X" (QR trên bảng tên bàn, không cần đăng nhập) ---------- */
 function banMode(b){var nv=document.getElementById('nav');if(nv)nv.classList.add('hide');var dx=document.getElementById('dx');if(dx)dx.style.display='none';W.innerHTML='<div class="msg">Đang tải…</div>';
   call('khCongKhai').then(function(p){S.pub=p;var cf=p.cfg||{},bb=(b<10?'0':'')+b;try{document.getElementById('hT').textContent='Bàn '+bb;document.getElementById('hS').textContent=D(p.sk.ten)}catch(e){}W.innerHTML='';
