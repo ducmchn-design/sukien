@@ -2600,7 +2600,7 @@ var EVBAN = (function () {
   function so(v) { var m = String(v == null ? '' : v).match(/\d+/); return m ? +m[0] : 0; }
   function vipList(v) { var out = []; String(v || '').split(/[,;\s]+/).forEach(function (p) { var m = p.match(/^(\d+)\s*[-–]\s*(\d+)$/); if (m) { for (var i = +m[1]; i <= +m[2]; i++) out.push(i); } else if (so(p)) out.push(so(p)); }); return out; }
   /* Phân khu A–D (họp chốt 17/11/2026): chia 4 như bánh chưng, mỗi khu 5 bàn × 3 hàng.
-     A trên-phải (hàng 1 = Đại biểu & BOD; hàng 2–3 = PHHS cấp 2, 3) · B dưới-phải · C dưới-trái · D trên-trái (B, C, D = PHHS mầm non, cấp 1). */
+     A trên-phải (hàng 1 = Đại biểu & BOD; hàng 2–3 = PHHS cấp 2, 3) · B dưới-phải · C dưới-trái · D trên-trái (B, C = PHHS Tiểu học; D = PHHS Mầm non). */
   var KHU = { A: ['#076AA7', 'Đại biểu & BOD (hàng 1) · PHHS THCS, THPT'], B: ['#ED7920', 'PHHS Tiểu học'], C: ['#1E8E3E', 'PHHS Tiểu học'], D: ['#7B4FB5', 'PHHS Mầm non'] };
   function doiTuong(b, n, per) { var z = khu(b, n, per); if (!z) return ''; if (z !== 'A') return KHU[z][1]; return Math.floor((so(b) - 1) / (+per || 10)) === 0 ? 'Đại biểu & BOD' : 'PHHS THCS, THPT'; }
   function coKhu(n, per) { return +per === 10 && +n === 60; }
