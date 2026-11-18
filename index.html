@@ -2601,8 +2601,8 @@ var EVBAN = (function () {
   function vipList(v) { var out = []; String(v || '').split(/[,;\s]+/).forEach(function (p) { var m = p.match(/^(\d+)\s*[-–]\s*(\d+)$/); if (m) { for (var i = +m[1]; i <= +m[2]; i++) out.push(i); } else if (so(p)) out.push(so(p)); }); return out; }
   /* Phân khu A–D (họp chốt 17/11/2026): chia 4 như bánh chưng, mỗi khu 5 bàn × 3 hàng.
      A trên-phải (hàng 1 = Đại biểu & BOD; hàng 2–3 = PHHS cấp 2, 3) · B dưới-phải · C dưới-trái · D trên-trái (B, C, D = PHHS mầm non, cấp 1). */
-  var KHU = { A: ['#076AA7', 'Đại biểu & BOD (hàng 1) · PHHS cấp 2, 3'], B: ['#ED7920', 'PHHS mầm non, cấp 1'], C: ['#1E8E3E', 'PHHS mầm non, cấp 1'], D: ['#7B4FB5', 'PHHS mầm non, cấp 1'] };
-  function doiTuong(b, n, per) { var z = khu(b, n, per); if (!z) return ''; if (z !== 'A') return 'PHHS mầm non, cấp 1'; return Math.floor((so(b) - 1) / (+per || 10)) === 0 ? 'Đại biểu & BOD' : 'PHHS cấp 2, cấp 3'; }
+  var KHU = { A: ['#076AA7', 'Đại biểu & BOD (hàng 1) · PHHS THCS, THPT'], B: ['#ED7920', 'PHHS Tiểu học'], C: ['#1E8E3E', 'PHHS Tiểu học'], D: ['#7B4FB5', 'PHHS Mầm non'] };
+  function doiTuong(b, n, per) { var z = khu(b, n, per); if (!z) return ''; if (z !== 'A') return KHU[z][1]; return Math.floor((so(b) - 1) / (+per || 10)) === 0 ? 'Đại biểu & BOD' : 'PHHS THCS, THPT'; }
   function coKhu(n, per) { return +per === 10 && +n === 60; }
   function khu(b, n, per) { b = so(b); n = +n || 60; per = +per || 10; if (!coKhu(n, per) || !(b >= 1 && b <= n)) return ''; var r = Math.floor((b - 1) / per), c = (b - 1) % per; if (r % 2) c = per - 1 - c; return r < 3 ? (c < 5 ? 'D' : 'A') : (c < 5 ? 'C' : 'B'); }
   var CSS = '<style id="evbcss">.evb{position:relative}.evb svg{width:100%;height:auto;display:block;border-radius:14px;font-family:Montserrat,Arial,sans-serif;-webkit-user-select:none;user-select:none}.evb .tb{cursor:pointer}.evb .tb:hover .tc,.evb .tb.on .tc{stroke:#05507E;stroke-width:5}.evb .tb.on .tc{fill:#E7F2F9}' +
@@ -3226,10 +3226,17 @@ function tDi(){var k=S.kh,z=k.khu;
    '<div class="step"><i>4</i><div>'+T(92)+''+esc(z.ve||''+T(53)+'')+'</b>.</div></div></div>'+gmNut(z.ma,z.ten));
   W.appendChild(mapCard([z.ma].concat(dd0().filter(function(p){return p.loai==='Điểm thả'}).map(function(p){return p.ma})),false,z.duong));
 }
-function mapCard(hi,pub,route){var d=document.createElement('div');d.className='card';var dd=ddL();
-  d.innerHTML='<h2>'+(route?''+T(70)+'':''+T(65)+'')+'</h2><div class="map" id="mp">'+EVMAP.svg(dd,{hi:hi,route:route})+'</div><div class="sm" style="margin-top:6px">'+T(10)+'</div>';
-  d.querySelector('#mp').addEventListener('click',function(e){var g=e.target.closest('g[data-ma]');if(!g)return;var p=dd.filter(function(x){return x.ma===g.getAttribute('data-ma')})[0];if(p)sheet('<div class="tag">'+esc(p.loai)+'</div><h2 style="margin:8px 0 4px;font:800 18px Montserrat;color:var(--deep)">'+esc(p.ten)+'</h2><p style="margin:0">'+esc(p.mt||'')+'</p>')});
-  return d}
+/* ---- Bản đồ ảnh 2.5D chính thức (18/11/2026): mặt bằng đón khách + luồng xe phụ huynh, có đánh dấu khu của gia đình ---- */
+var IMG25={mb:'https://ducmchn-design.github.io/sukien/mb.jpg?v=1',dx:'https://ducmchn-design.github.io/sukien/dx.jpg?v=1'};
+var DXP={P1:[83.2,12.5],P2:[92.2,28.7],P3:[97.3,72.6],P4:[87.3,72.2],P5:[45.2,64.8],P6:[9.8,50.3]},MBP={P9:[46.3,63.9]};
+function anh25(src,ten,dau){var m=dau?'<span class="i25r" style="left:'+dau[0]+'%;top:'+dau[1]+'%"></span>':'';
+  return '<div class="i25" data-src="'+src+'"><img src="'+src+'" alt="'+esc(ten)+'" loading="lazy">'+m+'<span class="i25z">⤢ Phóng to</span></div>'}
+function anh25Gan(c){[].forEach.call(c.querySelectorAll('.i25'),function(x){x.onclick=function(){var o=document.createElement('div');o.className='i25o';o.innerHTML='<button aria-label="Đóng">✕</button><div class="i25s"><img src="'+x.dataset.src+'" alt=""></div>';document.body.appendChild(o);o.querySelector('button').onclick=function(){o.remove()};o.onclick=function(e){if(e.target===o)o.remove()}}})}
+(function(){var st=document.createElement('style');st.textContent='.i25{position:relative;border-radius:14px;overflow:hidden;cursor:zoom-in;border:1px solid #D6E2EC;background:#EEF3F7}.i25 img{width:100%;display:block}.i25z{position:absolute;right:8px;bottom:8px;background:rgba(5,80,126,.88);color:#fff;font:700 12px Montserrat,Arial;padding:5px 10px;border-radius:99px}.i25r{position:absolute;width:13%;aspect-ratio:1;transform:translate(-50%,-50%);border:4px solid #EC7A22;border-radius:50%;box-shadow:0 0 0 4px rgba(255,255,255,.85);animation:i25p 1.4s ease-in-out infinite}@keyframes i25p{0%,100%{transform:translate(-50%,-50%) scale(.85);opacity:1}50%{transform:translate(-50%,-50%) scale(1.15);opacity:.55}}.i25o{position:fixed;inset:0;z-index:99999;background:rgba(10,20,30,.92);display:flex;align-items:center;justify-content:center}.i25o button{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:0;background:#fff;font:800 18px Arial;z-index:2}.i25s{width:100%;height:100%;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:center}.i25s img{width:220%;max-width:none;display:block}@media(min-width:900px){.i25s img{width:100%}}';document.head.appendChild(st)})();
+function mapCard(hi,pub,route){var d=document.createElement('div');d.className='card';var kk=(hi||[])[0]||'',dau=DXP[kk],dau9=MBP[kk];
+  d.innerHTML='<h2>Luồng xe và bãi đỗ phụ huynh</h2>'+anh25(IMG25.dx,'Luồng xe phụ huynh: vào, thả người, đỗ, ra về',dau)+'<div class="sm" style="margin-top:6px">'+(dau?'Vòng cam nhấp nháy là <b>'+esc(kk.replace('P','Bãi '))+'</b> của gia đình. ':'')+'Xe vào theo thứ tự bãi 1 → 6, dừng tại cổng đón tiếp để người xuống, rồi đỗ vào ô trống dọc đường. Ra về đi thẳng hướng bãi 6, không quay đầu.</div>'+
+   '<h2 style="margin-top:14px">Mặt bằng đón khách</h2>'+anh25(IMG25.mb,'Mặt bằng đón khách: Cổng B check-in, chụp ảnh, triển lãm, nhà thi đấu',dau9)+'<div class="sm" style="margin-top:6px">Đi bộ: Cổng B (check-in) → khu chụp ảnh → triển lãm 5 năm → nhà thi đấu. Chạm vào ảnh để phóng to.</div>';
+  anh25Gan(d);return d}
 /* ---- Chỉ đường Google Maps (17/11/2026): tới đúng bãi nếu khu vực có tọa độ, không thì tới trường ---- */
 function gmDir(td){return 'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(td)+'&travelmode=driving'}
 function gmTruong(){return ((S.pub&&S.pub.cfg)||{}).toaDo||'21.1704853,106.0893638'}
@@ -3242,17 +3249,16 @@ function m3Che(){var m=store('evMV');return m==='2d'?'2d':'3d'}
 function m3Nut(on){return '<div class="chips" style="padding:0 0 8px" data-mv><button data-v="3d" aria-pressed="'+(on==='3d')+'">🛰 Ảnh 2.5D</button><button data-v="2d" aria-pressed="'+(on==='2d')+'">🗺 Sơ đồ 2D</button></div>'}
 function m3Gan(c,cb){var x=c.querySelector('[data-mv]');if(x)x.onclick=function(e){var b=e.target.closest('[data-v]');if(!b)return;store('evMV',b.dataset.v);[].forEach.call(x.children,function(y){y.setAttribute('aria-pressed',y===b)});cb(b.dataset.v)}}
 function tBd(){var dd=ddL(),L=['Tất cả','Nhà vệ sinh','Y tế','Hút thuốc','Cổng','Bãi ô tô','Lối thoát'];
-  var c=card('<div class="chips">'+L.map(function(x){return '<button data-f="'+x+'" aria-pressed="'+(S.f===x)+'">'+esc(x)+'</button>'}).join('')+'</div><div class="map" id="mp2"></div><div class="list" id="ls" style="margin-top:8px"></div>');
+  var kk=S.kh&&S.kh.khu?S.kh.khu.ma:'';
+  var c0=card('<h2>Mặt bằng đón khách</h2>'+anh25(IMG25.mb,'Mặt bằng đón khách Lễ kỷ niệm 5 năm',MBP[kk])+
+    '<div class="list" style="margin-top:10px">'+[['1','#05507E','Cổng B · Check-in','Cổng chính, quét QR tại cổng'],['2','#EC7A22','Chụp ảnh','Ngoài trời, sát cửa tòa nhà'],['3','#C0392B','Triển lãm 5 năm','Bên trong tòa nhà, tầng 1'],['4','#1F8A4C','Nhà thi đấu','Lễ kỷ niệm 08:50 và tiệc trưa 10:30'],['5','#14977E','Teabreak','Cạnh sân cỏ nhân tạo'],['6','#5B6873','Khu hút thuốc','Phía đông, ngoài khu đón khách'],['7','#6A4BB3','Đỗ xe VIP','Ô kẻ vạch trước tòa nhà, vào từ Cổng A']].map(function(x){return '<div class="it"><span class="dot" style="background:'+x[1]+'">'+x[0]+'</span><div><b>'+esc(x[2])+'</b><div class="sm">'+esc(x[3])+'</div></div></div>'}).join('')+'</div>');
+  var c1=card('<h2>Luồng xe và bãi đỗ phụ huynh</h2>'+anh25(IMG25.dx,'Luồng xe phụ huynh',DXP[kk])+'<div class="sm" style="margin-top:6px">'+(DXP[kk]?'Vòng cam nhấp nháy là <b>'+esc(kk.replace('P','Bãi '))+'</b> của gia đình. ':'')+'Bãi 1 → 6 dọc đường dành cho phụ huynh, xe chạy một chiều. Thả người tại cổng đón tiếp rồi đỗ vào ô trống.</div>');
+  anh25Gan(c0);anh25Gan(c1);
+  var c=card('<h2>Tiện ích trong khuôn viên</h2><div class="chips">'+L.map(function(x){return '<button data-f="'+x+'" aria-pressed="'+(S.f===x)+'">'+esc(x)+'</button>'}).join('')+'</div><div class="list" id="ls" style="margin-top:8px"></div>');
   function upd(){var only=S.f==='Tất cả'?null:(S.f==='Bãi ô tô'?['Bãi ô tô','Bãi xe máy']:[S.f]);
-    var hi=dd.filter(function(p){return !only||only.indexOf(p.loai)>=0}).map(function(p){return p.ma});
-    c.querySelector('#mp2').innerHTML=EVMAP.svg(dd,{only:only,hi:only?hi:null});
     c.querySelector('#ls').innerHTML=dd.filter(function(p){return !only||only.indexOf(p.loai)>=0}).map(function(p){var t=EVMAP.T[p.loai]||['#076AA7','•'];return '<div class="it"><span class="dot" style="background:'+t[0]+'">'+esc(t[1])+'</span><div><b>'+esc(p.ten)+'</b><div class="sm">'+esc(p.mt)+'</div></div></div>'}).join('')}
   c.querySelector('.chips').onclick=function(e){var b=e.target.closest('button');if(!b)return;S.f=b.dataset.f;[].forEach.call(this.children,function(x){x.setAttribute('aria-pressed',x===b)});upd()};
-  c.querySelector('#mp2').addEventListener('click',function(e){var g=e.target.closest('g[data-ma]');if(!g)return;var p=dd.filter(function(x){return x.ma===g.getAttribute('data-ma')})[0];if(p)sheet('<div class="tag">'+esc(p.loai)+'</div><h2 style="margin:8px 0 4px;font:800 18px Montserrat;color:var(--deep)">'+esc(p.ten)+'</h2><p style="margin:0">'+esc(p.mt||'')+'</p>')});
   upd();
-  var V=(S.pub&&S.pub.vung)||[];if(V.length){var kk=S.kh&&S.kh.khu?S.kh.khu.ma:'',hi=V.filter(function(v){return kk&&v.khu===kk}).map(function(v){return v.ma});
-    var c3=document.createElement('div');c3.className='card';c3.innerHTML=m3Nut(m3Che())+'<div id="m3w">'+EVMAP3.html(V,{img:(S.pub.cfg||{}).anh3d,hi:hi,chiKhach:true})+'</div><div class="sm" style="margin-top:8px">'+(hi.length?'Khối nhấp nháy là khu đỗ xe của gia đình. ':'')+'Chạm vào từng khối để xem thông tin.</div>';
-    W.insertBefore(c3,c);EVMAP3.bind(c3,V,{chiKhach:true});var ap=function(m){c3.querySelector('#m3w').style.display=m==='3d'?'':'none';c3.querySelector('.sm:last-child').style.display=m==='3d'?'':'none';c.style.display=m==='3d'?'none':''};m3Gan(c3,ap);ap(m3Che())}
   gmCard();
   card('<h2>'+T(81)+'</h2><div class="sm" style="font-size:13.5px;color:var(--ink)">'+T(7)+'</div>');
 }
