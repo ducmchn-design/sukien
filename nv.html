@@ -518,6 +518,35 @@ function tSc(){var a='';var c=card('<h2>Báo sự cố</h2><p class="sm" style="
   c.querySelector('#ph').onclick=function(){anh().then(function(x){a=x;c.querySelector('#pv').innerHTML='<img src="'+x+'" style="width:100%;border-radius:12px;margin-top:8px">'}).catch(function(){})};
   c.querySelector('#gui').onclick=function(){var b=this,mt=c.querySelector('#mt').value.trim();if(!mt){c.querySelector('#m').innerHTML='<div class="msg bad">Nhập mô tả.</div>';return}b.disabled=true;call('nvSuCo',TK,{loai:c.querySelector('#lo').value,moTa:mt,anh:a}).then(function(r){W.innerHTML='';card('<div class="msg ok">Đã gửi sự cố '+esc(r.ma)+'. Điều phối đã thấy trên màn hình điều hành.</div><button class="btn gh" id="ag">Báo thêm sự cố khác</button>').querySelector('#ag').onclick=tSc0}).catch(function(e){b.disabled=false;c.querySelector('#m').innerHTML='<div class="msg bad">'+esc(e.message)+'</div>'})}}
 function tSc0(){W.innerHTML='';tSc()}
+/* ===== Mở rộng 19/11/2026 (tab Check-in): khách phát sinh → bàn dự phòng; bấm giờ mẫu thời gian chờ ===== */
+var MR={cho:[],gui:[],tk:null,dp:null};try{var _mr=JSON.parse(localStorage.getItem('evCho')||'{}');MR.cho=_mr.cho||[];MR.gui=_mr.gui||[]}catch(e){}
+function mrLuu(){try{localStorage.setItem('evCho',JSON.stringify({cho:MR.cho,gui:MR.gui}))}catch(e){}}
+function mrMS(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
+var _tCi0=tCi;tCi=function(){_tCi0();mrPS();mrCho()};
+function mrPS(){var so='',i;for(i=1;i<=10;i++)so+='<option>'+i+'</option>';
+  var c=card('<h2>Khách phát sinh</h2><p class="sm" style="margin:0 0 6px">Khách đến nhưng không có trong danh sách và không có mã QR. Hệ thống tự xếp vào bàn dự phòng còn đủ ghế, ghi nhận đã check-in để Ban tổ chức đối soát.</p><div id="psDP" class="sm" style="margin:0 0 10px;color:#5a6f82">Đang tải bàn dự phòng…</div>'+
+   '<label class="f">Tên khách hoặc tên đoàn</label><input class="i" id="psTen" maxlength="80" autocomplete="off">'+
+   '<div style="display:grid;grid-template-columns:1fr 1.6fr;gap:8px;margin-top:8px"><div><label class="f">Số người</label><select class="i" id="psSo">'+so+'</select></div><div><label class="f">Nhóm</label><select class="i" id="psNh"><option>Phụ huynh Liên cấp</option><option>Phụ huynh Mầm non</option><option>Khách mời thêm</option><option>CBGVNV</option></select></div></div>'+
+   '<label class="f" style="margin-top:8px">Lớp của con / ghi chú (không bắt buộc)</label><input class="i" id="psGc" maxlength="120"><div id="psKQ"></div><button class="btn" id="psV" style="margin-top:10px">Xếp bàn dự phòng</button>');
+  mrDPVe();
+  c.querySelector('#psV').onclick=function(){var b=this,ten=c.querySelector('#psTen').value.trim();if(ten.length<2){c.querySelector('#psKQ').innerHTML='<div class="msg bad" style="margin-top:8px">Nhập tên khách hoặc tên đoàn.</div>';return}
+    var o={ten:ten,so:c.querySelector('#psSo').value,nhom:c.querySelector('#psNh').value,gc:c.querySelector('#psGc').value};b.disabled=true;b.textContent='Đang xếp bàn…';
+    call('nvKhachPhatSinh',TK,o).then(function(r){b.disabled=false;b.textContent='Xếp bàn dự phòng';MR.dp=r.dp;mrDPVe();c.querySelector('#psTen').value='';c.querySelector('#psGc').value='';
+      c.querySelector('#psKQ').innerHTML='<div style="margin-top:10px;background:#E6F4EA;border-left:5px solid #1E8E3E;border-radius:12px;padding:12px"><div style="font-weight:800;color:#1E8E3E">Mời khách vào bàn</div><div style="font:800 46px/1 Montserrat,sans-serif;color:#05507E;margin:4px 0">'+r.ban+'</div><div>'+esc(r.ten)+' · '+r.so+' người · đã ghi check-in</div></div>';
+      try{navigator.vibrate&&navigator.vibrate(120)}catch(e){}try{lamMoi(false)}catch(e){}})
+    .catch(function(er){b.disabled=false;b.textContent='Xếp bàn dự phòng';c.querySelector('#psKQ').innerHTML='<div class="msg bad" style="margin-top:8px">'+esc(er.message)+'</div>'})}}
+function mrDPVe(){var e=document.getElementById('psDP');if(!e)return;var v=function(l){e.innerHTML=!l.length?'<b style="color:#B4560E">Chưa có bàn dự phòng.</b> Ban tổ chức khai báo "Bàn dự phòng" trong cấu hình.':'Bàn dự phòng: '+l.map(function(x){return '<b style="color:'+(x.trong?'#05507E':'#B3261E')+'">'+x.ban+'</b> (còn '+x.trong+' ghế)'}).join(' · ')};
+  if(MR.dp)v(MR.dp);call('nvBanDP',TK).then(function(l){MR.dp=l;if(document.getElementById('psDP'))v(l)}).catch(function(er){e.textContent=er.message})}
+function mrCho(){var c=card('<h2>Đo thời gian chờ</h2><p class="sm" style="margin:0 0 8px">Giờ cao điểm, chọn ngẫu nhiên khoảng 10 khách mỗi 15 phút. Bấm <b>Khách vào hàng</b> khi khách bắt đầu xếp hàng, bấm <b>Xong</b> khi chính khách đó check-in xong.</p><button class="btn" id="chV">+ Khách vào hàng</button><div id="chDS" style="margin-top:8px"></div><div id="chTK" class="sm" style="margin-top:8px;color:#5a6f82"></div>');
+  c.querySelector('#chV').onclick=function(){MR.cho.push({id:Date.now(),a:Date.now()});mrLuu();mrChoVe();try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}};
+  c.querySelector('#chDS').onclick=function(e){var b=e.target.closest('button');if(!b)return;var id=+b.dataset.id,x=null;MR.cho=MR.cho.filter(function(y){if(y.id===id){x=y;return false}return true});
+    if(x&&!b.dataset.huy)MR.gui.push([x.a,Date.now(),'']);mrLuu();mrChoVe();if(x&&!b.dataset.huy)mrGui()};
+  mrChoVe();mrTKVe();if(MR.gui.length)mrGui();else call('nvChoTK',TK).then(function(t){MR.tk=t;mrTKVe()}).catch(function(){})}
+function mrChoVe(){var e=document.getElementById('chDS');if(!e)return;e.innerHTML=MR.cho.map(function(x,i){return '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;margin-top:6px;background:#F1F6FA;border-radius:12px"><b style="min-width:66px">Khách '+(i+1)+'</b><span data-a="'+x.a+'" style="flex:1;font:800 22px Montserrat,sans-serif;color:#05507E;font-variant-numeric:tabular-nums">'+mrMS((Date.now()-x.a)/1000)+'</span><button class="btn" data-id="'+x.id+'" style="width:auto;padding:10px 18px;margin:0">Xong</button><button class="btn gh" data-id="'+x.id+'" data-huy="1" style="width:auto;padding:10px 12px;margin:0" aria-label="Bỏ lượt đo">✕</button></div>'}).join('')}
+function mrTKVe(){var e=document.getElementById('chTK');if(!e)return;var t=MR.tk;e.innerHTML=(MR.gui.length?'<b style="color:#B4560E">'+MR.gui.length+' lượt chờ gửi</b> · ':'')+(t&&t.n?'Đã đo <b>'+t.n+'</b> lượt · trung vị <b>'+mrMS(t.tv)+'</b> · 90% khách chờ dưới <b>'+mrMS(t.p90)+'</b>':'Chưa có lượt đo nào hôm nay.')}
+function mrGui(){if(!MR.gui.length)return;var l=MR.gui.slice(0,30);call('nvThoiGianCho',TK,l).then(function(r){MR.gui=MR.gui.slice(l.length);mrLuu();MR.tk=r.tk;mrTKVe()}).catch(function(){mrTKVe()})}
+setInterval(function(){[].forEach.call(document.querySelectorAll('#chDS [data-a]'),function(s){s.textContent=mrMS((Date.now()-(+s.dataset.a))/1000)})},1000);
+
 load();
 })();
 </script></body></html>
